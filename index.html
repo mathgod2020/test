@@ -9,7 +9,7 @@
 		<hr noshade style="color: black; border-color: inherit;">
 		<br>
 		<script type="text/javascript">
-			var codes1 = ["할리갈리::1"];
+			var codes1 = ["할리갈리::1::할리갈리"];
 			var i = 0;
 			while(i<codes1.length){
 				document.write("<div class=\"code-box\">");
@@ -17,7 +17,7 @@
 				document.write("<h2 style=\"text-align: center\">"+(codes1[i]).split("::")[0]+"</h2>");
 				document.write("<center>");
 				document.write("<br>");
-				document.write("<a download href=\"cs"+(Number((codes1[i]).split("::")[1]))+".txt\"><input type=\"button\" name=\"\" style=\"\" value=\"다운로드\" class=\"btn1\"></a>");
+				document.write("<a download href=\"cs"+((codes1[i]).split("::")[2])+".txt\"><input type=\"button\" name=\"\" style=\"\" value=\"다운로드\" class=\"btn1\"></a>");
 				document.write("</center>");
 				document.write("</div>");
 				i++;
