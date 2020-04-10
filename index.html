@@ -1,576 +1,285 @@
 <!DOCTYPE HTML>
 <body>
-//할리갈리 v2.5
-var cards = ["🍌:1", "🍌:1", "🍌:1", "🍌:1", "🍌:1", "🍌:2", "🍌:2", "🍌:2", "🍌:3", "🍌:3", "🍌:3", "🍌:4", "🍌:4", "🍌:5", "🍓:1", "🍓:1", "🍓:1", "🍓:1", "🍓:1", "🍓:2", "🍓:2", "🍓:2", "🍓:3", "🍓:3", "🍓:3", "🍓:4", "🍓:4", "🍓:5", "🍈:1", "🍈:1", "🍈:1", "🍈:1", "🍈:1", "🍈:2", "🍈:2", "🍈:2", "🍈:3", "🍈:3", "🍈:3", "🍈:4", "🍈:4", "🍈:5", "🍑:1", "🍑:1", "🍑:1", "🍑:1", "🍑:1", "🍑:2", "🍑:2", "🍑:2", "🍑:3", "🍑:3", "🍑:3", "🍑:4", "🍑:4", "🍑:5"];
-var player = [];
-var all = "\u200b".repeat(500);
-var own = {};
-var cmg = "/";
-var z = [];
-var rmg = "[!] ";
-var turn = 0;
-var added = [0,0,0,0];
-var b = [];
-var b2 = [];
-var t1 = 0;
-var t2 = 0;
-var st = false;
-var f = [0,0,0,0];
-var rank = [];
-var fail = [];
-var pn;
-var admin = FileStream.read("/sdcard/ARCADE/HA/ADMIN.txt");
-var on = true;
-var sp = "";
-var sn = "";
-sum=(lst)=>{var r = 0; for(var i = 0; i<lst.length; i++){ r+=Number(lst[i]) } return r;};
-function shuffle(a) { var j, x, i; for (i = a.length; i; i -= 1) { j = Math.floor(Math.random() * i); x = a[i - 1]; a[i - 1] = a[j]; a[j] = x; } return a;};
-function setCards(x){
- var cards = ["🍌:1", "🍌:1", "🍌:1", "🍌:1", "🍌:1", "🍌:2", "🍌:2", "🍌:2", "🍌:3", "🍌:3", "🍌:3", "🍌:4", "🍌:4", "🍌:5", "🍓:1", "🍓:1", "🍓:1", "🍓:1", "🍓:1", "🍓:2", "🍓:2", "🍓:2", "🍓:3", "🍓:3", "🍓:3", "🍓:4", "🍓:4", "🍓:5", "🍈:1", "🍈:1", "🍈:1", "🍈:1", "🍈:1", "🍈:2", "🍈:2", "🍈:2", "🍈:3", "🍈:3", "🍈:3", "🍈:4", "🍈:4", "🍈:5", "🍑:1", "🍑:1", "🍑:1", "🍑:1", "🍑:1", "🍑:2", "🍑:2", "🍑:2", "🍑:3", "🍑:3", "🍑:3", "🍑:4", "🍑:4", "🍑:5"];
- var c = shuffle(cards);
- var list = [[],[],[],[]];
- var pc = Math.floor(cards.length/x);
- for(var i = 0; i<pc*x; i++){
-  if(i<pc){
-   list[0].push(cards[0]);
-  }else if(i>=pc&&i<pc*2){
-   list[1].push(cards[0]);
-  }else if(i>=pc*2&&i<pc*3){
-   list[2].push(cards[0]);
-  }else{
-   list[3].push(cards[0]);
-  }
-  c.splice(0,1);
- }
- return list;
-}
-function reset(){
- z = [];
- cards = ["🍌:1", "🍌:1", "🍌:1", "🍌:1", "🍌:1", "🍌:2", "🍌:2", "🍌:2", "🍌:3", "🍌:3", "🍌:3", "🍌:4", "🍌:4", "🍌:5", "🍓:1", "🍓:1", "🍓:1", "🍓:1", "🍓:1", "🍓:2", "🍓:2", "🍓:2", "🍓:3", "🍓:3", "🍓:3", "🍓:4", "🍓:4", "🍓:5", "🍈:1", "🍈:1", "🍈:1", "🍈:1", "🍈:1", "🍈:2", "🍈:2", "🍈:2", "🍈:3", "🍈:3", "🍈:3", "🍈:4", "🍈:4", "🍈:5", "🍑:1", "🍑:1", "🍑:1", "🍑:1", "🍑:1", "🍑:2", "🍑:2", "🍑:2", "🍑:3", "🍑:3", "🍑:3", "🍑:4", "🍑:4", "🍑:5"];
- player = [];
- turn = 0;
- added = [0,0,0,0];
- b = [];
- b2 = [];
- t1 = [];
- list = [[],[],[],[]];
- t2 = [];
- st = false;
- f = [0,0,0,0];
- rank = [];
- fail = [];
-}
-function response(room, msg, sender, isGroupChat, replier, ImageDB) {
- admin = FileStream.read("/sdcard/ARCADE/HA/ADMIN.txt");
- var room_list = FileStream.read("/sdcard/ARCADE/HA/ROOMS/LIST.txt");
- if(room_list==null) room_list = "";
- if(room_list.split("\n").length==100){
-  replier.reply(rmg+"100개 초과로 방을 생성할 수 없습니다.");
-  return;
- }
- var code = (java.lang.String(ImageDB.getProfileImage()).hashCode()).toString();
- function cR(x, y, z, w){
-  var mode_l = ["Classic"];
-  var code2 = (java.lang.String(ImageDB.getProfileImage()).hashCode()).toString();
-  if(room_list==""&&typeof x=="undefined"&&typeof y=="undefined"&&typeof z=="undefined"&&typeof w=="undefined"){
-   FileStream.write("/sdcard/ARCADE/HA/ROOMS/LIST.txt", "Untitled1");
-   replier.reply(rmg+"방을 생성하였습니다.\n방 이름 : Untitled1\n최소인원 : 2\n최대인원 : 4\n비밀번호 :\n게임모드 : Classic");
-   FileStream.write("/sdcard/ARCADE/HA/ROOMS/Untitled1/OWNER.txt", sender);
-   FileStream.write("/sdcard/ARCADE/HA/ROOMS/Untitled1/OWNERC.txt", code);
-   FileStream.write("/sdcard/ARCADE/HA/ROOMS/Untitled1/PW.txt", "");
-   FileStream.write("/sdcard/ARCADE/HA/ROOMS/Untitled1/GM.txt", "Classic");
-   FileStream.write("/sdcard/ARCADE/HA/ROOMS/Untitled1/MIN.txt", 2);
-   FileStream.write("/sdcard/ARCADE/HA/ROOMS/Untitled1/MAX.txt", 4);
-   FileStream.write("/sdcard/ARCADE/HA/ROOMS/Untitled1/PL.txt", code+"/".repeat(21)+sender);
-   FileStream.write("/sdcard/ARCADE/HA/PLAYERS/"+code+"/JOINING.txt", "Untitiled1");
-  }else if(typeof x=="undefined"&&typeof y=="undefined"&&typeof z=="undefined"&&typeof w=="undefined"){
-   FileStream.append("/sdcard/ARCADE/HA/ROOMS/LIST.txt", (room_list==""?"":"\n")+"Untitled"+(room_list.split("\n").length+1));
-   replier.reply(rmg+"방을 생성하였습니다.\n방 이름 : Untitled"+(room_list.split("\n").length+1)+"\n최소인원 : 2\n최대인원 : 4\n비밀번호 :\n게임모드 : Classic");
-   FileStream.write("/sdcard/ARCADE/HA/ROOMS/Untitled"+(room_list.split("\n").length+1)+"/OWNER.txt", sender);
-   FileStream.write("/sdcard/ARCADE/HA/ROOMS/Untitled"+(room_list.split("\n").length+1)+"/OWNERC.txt", code);
-   FileStream.write("/sdcard/ARCADE/HA/ROOMS/Untitled"+(room_list.split("\n").length+1)+"/PW.txt", "");
-   FileStream.write("/sdcard/ARCADE/HA/ROOMS/Untitled"+(room_list.split("\n").length+1)+"/GM.txt", "Classic");
-   FileStream.write("/sdcard/ARCADE/HA/ROOMS/Untitled"+(room_list.split("\n").length+1)+"/MIN.txt", 2);
-   FileStream.write("/sdcard/ARCADE/HA/ROOMS/Untitled"+(room_list.split("\n").length+1)+"/MAX.txt", 4);
-   FileStream.write("/sdcard/ARCADE/HA/PLAYERS/"+code+"/JOINING.txt", "Untitled"+(room_list.split("\n").length+1));
-   FileStream.write("/sdcard/ARCADE/HA/ROOMS/Untitled"+(room_list.split("\n").length+1)+"/PL.txt", code+"/".repeat(21)+sender);
-  }else{
-   if(room_list.split("\n").indexOf(x)==-1){
-    if(x.includes("\\")||x.includes("/")||x.includes(".")||x.includes(";")){
-     if(x.length>0&&x.length<21){
-      replier.reply(rmg+"방 이름은 \\, /, ;, . 을 포함할 수 없습니다.");
-     }else{
-      replier.reply(rmg+"방 이름은 1~20자만 가능합니다.");
-     }
-    }else{
-     if(typeof x=="undefined"&&typeof y=="undefined"){
-      FileStream.append("/sdcard/ARCADE/HA/ROOMS/LIST.txt", (room_list==""?"":"\n")+(typeof x=="undefined"?"Untitled"+(room_list.split("\n").length+1):x));
-      replier.reply(rmg+"방을 생성하였습니다.\n방 이름 : "+(typeof x=="undefined"?"Untitled"+(room_list.split("\n").length+1):x)+"\n최소인원 : "+(typeof y=="undefined"||isNaN(Number(y.split(".")[0]))?2:Number(y.split(".")[0]))+"\n최대인원 : "+(typeof y=="undefined"||isNaN(Number(y.split(".")[0]))?4:Number(y.split(".")[1]))+"\n비밀번호 : "+(typeof z=="undefined"?"":z)+"\n게임모드 : "+(typeof w=="undefined"&&(w>-1&&w<mode_l.length&&false==(isNaN(Number(w))))?"Classic":mode_l[w]));
-      FileStream.write("/sdcard/ARCADE/HA/ROOMS/"+(typeof x=="undefined"?"Untitled"+(room_list.split("\n").length+1):x)+"/OWNER.txt", sender);
-      FileStream.write("/sdcard/ARCADE/HA/ROOMS/"+(typeof x=="undefined"?"Untitled"+(room_list.split("\n").length+1):x)+"/OWNERC.txt", code);
-      FileStream.write("/sdcard/ARCADE/HA/ROOMS/"+(typeof x=="undefined"?"Untitled"+(room_list.split("\n").length+1):x)+"/PW.txt", (typeof z=="undefined"?"":z));
-      FileStream.write("/sdcard/ARCADE/HA/ROOMS/"+(typeof x=="undefined"?"Untitled"+(room_list.split("\n").length+1):x)+"/GM.txt", (typeof w=="undefined"&&(w>-1&&w<mode_l.length&&false==(isNaN(Number(w))))?"Classic":mode_l[w]));
-      FileStream.write("/sdcard/ARCADE/HA/ROOMS/"+(typeof x=="undefined"?"Untitled"+(room_list.split("\n").length+1):x)+"/MIN.txt", (typeof y=="undefined"||isNaN(Number(y.split(".")[0]))?2:Number(y.split(".")[0])));
-      FileStream.write("/sdcard/ARCADE/HA/ROOMS/"+(typeof x=="undefined"?"Untitled"+(room_list.split("\n").length+1):x)+"/MAX.txt", (typeof y=="undefined"||isNaN(Number(y.split(".")[0]))?4:Number(y.split(".")[1])));
-      FileStream.write("/sdcard/ARCADE/HA/PLAYERS/"+code+"/JOINING.txt", (typeof x=="undefined"?"Untitled"+(room_list.split("\n").length+1):x));
-      FileStream.write("/sdcard/ARCADE/HA/ROOMS/"+(typeof x=="undefined"?"Untitled"+(room_list.split("\n").length+1):x)+"/PL.txt", code+"/".repeat(21)+sender);
-     }else{
-      if(x=="@Code"&&y[0]=="@"&&typeof z=="undefined"&&typeof w=="undefined"){
-       var mcod = y.substr(1);
-       mcod = mcod.split(";");
-       var error = "";
-       var o_room = "Untitled"+(room_list.split("\n").length+1);
-       var o_min = 2;
-       var o_max = 4;
-       var o_pw = "";
-       var o_gm = "Classic";
-       try{
-        for(var i = 0; i<mcod.length; i++){
-         if(mcod[i].split("=")[0]=="ROOM_NAME"){
-          if(mcod[i].split("=")[1].includes("\\")||mcod[i].split("=")[1].includes("/")||mcod[i].split("=")[1].includes(".")||mcod[i].split("=")[1].includes(";")||mcod[i].split("=")[1].includes(":")){
-           error = "방 이름은 \\, /, ;, :, . 을 포함할 수 없습니다.\n• line : "+(i+1);
-           replier.reply(rmg+error);
-           return;
-          }else{
-           if(mcod[i].split("=")[1].length>0&&mcod[i].split("=")[1].length<21){
-            o_room = mcod[i].split("=")[1];
-           }else{
-            if(room_list.split("\n").indexOf(mcod[i].split("=")[1])==-1){
-             error = "방 이름의 길이는 1~20자 여야합니다.\n• line : "+(i+1);
-             replier.reply(rmg+error);
-             return;
-            }else{
-             error = "중복된 방 이름입니다.\n• line : "+(i+1);
-             replier.reply(rmg+error);
-             return;
-            }
-           }
-          }
-         }else if(mcod[i].split("=")[0]=="MIN"){
-          if(isNaN(Number(mcod[i].split("=")[1]))){
-           error = "최소인원은 숫자여야 합니다.\n• line : "+(i+1);
-           replier.reply(rmg+error);
-           return;
-          }else{
-           if(Number(mcod[i].split("=")[1])<1){
-            error = "최소인원인 1이 최솟값입니다.\n• line : "+(i+1);
-            replier.reply(rmg+error);
-            return;
-           }else{
-            o_min = Number(mcod[i].split("=")[1]);
-           }
-          }
-         }else if(mcod[i].split("=")[0]=="MAX"){
-          if(isNaN(Number(mcod[i].split("=")[1]))){
-           error = "최대인원은 숫자여야 합니다.\n• line : "+(i+1);
-           replier.reply(rmg+error);
-           return;
-          }else{
-           o_max = Number(mcod[i].split("=")[1]);
-          }
-         }else if(mcod[i].split("=")[0]=="PASSWORD"){
-          if(mcod[i].split("=")[1].includes("\\")||mcod[i].split("=")[1].includes("/")||mcod[i].split("=")[1].includes(".")||mcod[i].split("=")[1].includes(";")||mcod[i].split("=")[1].includes(":")){
-           error = "비밀번호는 \\, /, ;, :, . 을 포함할 수 없습니다.\n• line : "+(i+1);
-           replier.reply(rmg+error);
-           return;
-          }else{
-           o_pw = mcod[i].split("=")[1];
-          }
-         }else if(mcod[i].split("=")[0]=="GAME_MODE"){
-          if(isNaN(Number(mcod[i].split("=")[1]))){
-           error = "게임모드는 번호여야 합니다.\n• line : "+(i+1);
-           replier.reply(rmg+error);
-           return;
-          }else{
-           if(Number(mcod[i].split("=")[1])>-1||Number(mcod[i].split("=")[1])<mode_l.length){
-            error = "유효하지 않은 게임모드입니다.\n• line : "+(i+1);
-            replier.reply(rmg+error);
-            return;
-           }else{
-            o_gm = mode_l[Number(mcod[i].split("=")[1])];
-           }
-          }
-         }
-        }
-        if(o_max<o_min){
-         error = "최소인원이 최대인원 보다 클수 없습니다.\n• line : "+(i+1);
-         replier.reply(rmg+error);
-         return;
-        }
-        replier.reply(rmg+"방을 생성하였습니다.\n방 이름 : "+o_room+"\n최소인원 : "+o_min+"\n최대인원 : "+o_max+"\n비밀번호 : "+o_pw+"\n게임모드 : "+o_gm);
-        FileStream.append("/sdcard/ARCADE/HA/ROOMS/LIST.txt", (room_list==""?"":"\n")+o_room);
-        FileStream.write("/sdcard/ARCADE/HA/ROOMS/"+o_room+"/OWNER.txt", sender);
-        FileStream.write("/sdcard/ARCADE/HA/ROOMS/"+o_room+"/OWNERC.txt", code);
-        FileStream.write("/sdcard/ARCADE/HA/ROOMS/"+o_room+"/PW.txt", o_pw);
-        FileStream.write("/sdcard/ARCADE/HA/ROOMS/"+o_room+"/GM.txt", o_gm);
-        FileStream.write("/sdcard/ARCADE/HA/ROOMS/"+o_room+"/MIN.txt", o_min);
-        FileStream.write("/sdcard/ARCADE/HA/ROOMS/"+o_room+"/MAX.txt", o_max);
-        FileStream.write("/sdcard/ARCADE/HA/PLAYERS/"+code+"/JOINING.txt", o_room);
-        FileStream.write("/sdcard/ARCADE/HA/ROOMS/"+o_room+"/PL.txt", code+"/".repeat(21)+sender);
-       }catch(e){
-        replier.reply(rmg+"코드 적용 도중 에러가 발생했습니다.");
-        return;
-       }
-      }else{
-       if((typeof y=="undefined"||isNaN(Number(y.split(".")[0]))?2:Number(y.split(".")[0]))>(typeof y=="undefined"||y.indexOf(".")==-1||isNaN(Number(y.split(".")[1]))?4:Number(y.split(".")[1]))){
-        replier.reply(rmg+"최소인원이 최대인원보다 클수 없습니다.");
-        return
-       }
-       FileStream.append("/sdcard/ARCADE/HA/ROOMS/LIST.txt", (room_list==""?"":"\n")+(typeof x=="undefined"?"Untitled"+(room_list.split("\n").length+1):x));
-       replier.reply(rmg+"방을 생성하였습니다.\n방 이름 : "+(typeof x=="undefined"?"Untitled"+(room_list.split("\n").length+1):x)+"\n최소인원 : "+(typeof y=="undefined"||isNaN(Number(y.split(".")[0]))?2:Number(y.split(".")[0]))+"\n최대인원 : "+(typeof y=="undefined"||y.indexOf(".")==-1||isNaN(Number(y.split(".")[1]))?4:Number(y.split(".")[1]))+"\n비밀번호 : "+(typeof z=="undefined"?"":z)+"\n게임모드 : "+(typeof w!="undefined"&&(w>-1&&w<1&&false==(isNaN(Number(w))))?mode_l[w]:"Classic"));
-       FileStream.write("/sdcard/ARCADE/HA/ROOMS/"+(typeof x=="undefined"?"Untitled"+(room_list.split("\n").length+1):x)+"/OWNER.txt", sender);
-       FileStream.write("/sdcard/ARCADE/HA/ROOMS/"+(typeof x=="undefined"?"Untitled"+(room_list.split("\n").length+1):x)+"/OWNERC.txt", code);
-       FileStream.write("/sdcard/ARCADE/HA/ROOMS/"+(typeof x=="undefined"?"Untitled"+(room_list.split("\n").length+1):x)+"/PW.txt", (typeof z=="undefined"?"":z));
-       FileStream.write("/sdcard/ARCADE/HA/ROOMS/"+(typeof x=="undefined"?"Untitled"+(room_list.split("\n").length+1):x)+"/GM.txt", (typeof w!="undefined"&&Number(w)>-1&&Number(w)<mode_l.length?mode_l[Number(w)]:"Classic"));
-       FileStream.write("/sdcard/ARCADE/HA/ROOMS/"+(typeof x=="undefined"?"Untitled"+(room_list.split("\n").length+1):x)+"/MIN.txt", (typeof y=="undefined"||isNaN(Number(y.split(".")[0]))?2:Number(y.split(".")[0])));
-       FileStream.write("/sdcard/ARCADE/HA/ROOMS/"+(typeof x=="undefined"?"Untitled"+(room_list.split("\n").length+1):x)+"/MAX.txt", (typeof y=="undefined"||y.indexOf(".")==-1||isNaN(Number(y.split(".")[1]))?4:Number(y.split(".")[1])));
-       FileStream.write("/sdcard/ARCADE/HA/PLAYERS/"+code+"/JOINING.txt", (typeof x=="undefined"?"Untitled"+(room_list.split("\n").length+1):x));
-       FileStream.write("/sdcard/ARCADE/HA/ROOMS/"+(typeof x=="undefined"?"Untitled"+(room_list.split("\n").length+1):x)+"/PL.txt", code+"/".repeat(21)+sender);
-      }
-     }
-    }
-   }else{
-    replier.reply(rmg+"같은 방 이름이 이미 존재합니다.");
-   }
-  }
- }
- var cmd = msg.replace(cmg, "");
- if(cmd==msg) cmd = "";
- if(admin==null){
-  admin = [];
- }else{
-  admin = admin.split("\n");
- }
- if(cmd=="켜기"){
-  if(admin.indexOf(code)!=-1){
-   on = true;
-   replier.reply(rmg+"켜짐");
-  }else{
-   replier.reply(rmg+"관리자가 아닙니다.");
-  }
- }
- if(on==false) return;
- if(cmd=="참가"){
-  if(st==true){
-   replier.reply(rmg+"게임이 진행중입니다.");
-  }else{
-   if(player.indexOf(sender)==-1){
-    if(player.length==4){
-     replier.reply(rmg+"방이 꽉 찼습니다.");
-    }else{
-     player.push(sender);
-     replier.reply(rmg+"참가 하였습니다.\n(참가 인원 : "+player.length+"/4)");
-    }
-   }else{
-    replier.reply(rmg+"참가중입니다.");
-   }
-  }
- }else if(cmd=="취소"){
-  if(st==false){
-   if(player.indexOf(sender)!=-1){
-    player.splice(player.indexOf(sender),1);
-    replier.reply(rmg+"취소 하였습니다.\n(참가 인원 : "+player.length+"/4)");
-   }else{
-    replier.reply(rmg+"참가자가 아닙니다.");
-   }
-  }else{
-   replier.reply(rmg+"게임이 진행중입니다.");
-  }
- }else if(cmd=="목록"){
-  replier.reply((player.length==0?rmg+"참가자가 없습니다.":rmg+"참가자 ("+player.length+"명)"+(player.length>0?"\n1 • "+player[0]:"")+(player.length>1?"\n2 • "+player[1]:"")+(player.length>2?"\n3 • "+player[2]:"")+(player.length>3?"\n4 • "+player[3]:"")));
- }else if(cmd=="시작"){
-  if(st==false){
-   if(player.length>1){
-    if(player.indexOf(sender)!=-1){
-     st = true;
-     list = setCards(player.length);
-     pn = player.length;
-     replier.reply(rmg+"게임이 시작되었습니다.\n"+player[0]+"님의 차례입니다.");
-    }else{
-     replier.reply(rmg+"미참가자는 시작할 수 없습니다.");
-    }
-   }else{
-    replier.reply(rmg+"최소 인원은 2명입니다.");
-   }
-  }else{
-   replier.reply(rmg+"진행중인 게임이 있습니다.");
-  }
- }else if(cmd=="공개"){
-  if(st==false){
-   replier.reply(rmg+"시작된 게임이 없습니다.");
-   return;
-  }
-  if(player.indexOf(sender)!=-1){
-   if(sender==player[turn%player.length]){
-    if(1>list[turn%player.length].length){
-     f[turn%player.length] = 1;
-     replier.reply(rmg+"현재 공개 가능한 카드가 없습니다.\n다음으로 턴을 넘깁니다 : "+player[(turn+1%player.length)]);
-     turn++;
-    }else{
-     f[turn%player.length] = 0;
-     for(var i = 0; i<player.length; i++){
-      if(list[i].length<1){
-       fail.push(player[i]);
-       rank.push(player[i]);
-       replier.reply(rmg+player[i]+"님이 탈락하셨습니다.");
-       player.splice(player.indexOf(player[i]),1);
-       if(pn==2&&fail.length==1){
-        replier.reply(rmg+"게임이 종료되었습니다.\n1st : "+player+"\n2nd : "+fail);
-        reset();
-       }else if(pn==3&&fail.length==2){
-        replier.reply(rmg+"게임이 종료되었습니다.\n1st : "+player+"\n2nd : "+rank[1]+"\n3rd : "+rank[0]);
-        reset();
-       }else if(pn==4&&fail.length==3){
-        replier.reply(rmg+"게임이 종료되었습니다.\n1st : "+player+"\n2nd : "+rank[2]+"\n3rd : "+rank[1]+"\n4th : "+rank[2]);
-        reset();
-       }
-      }
-     }
-    }
-    added = [0,0,0,0];
-    b.push(list[turn%player.length][0]);
-    for(var q = 0; q<(b.length>player.length?player.length:b.length); q++){
-     if(b[b.length-(q+1)].split(":")[0]=="🍌"){
-      added[0] += Number(b[b.length-(q+1)].split(":")[1]);
-     }else if(b[b.length-(q+1)].split(":")[0]=="🍓"){
-      added[1] += Number(b[b.length-(q+1)].split(":")[1]);
-     }else if(b[b.length-(q+1)].split(":")[0]=="🍈"){
-      added[2] += Number(b[b.length-(q+1)].split(":")[1]);
-     }else{
-      added[3] += Number(b[b.length-q-1].split(":")[1]);
-     }
-    }
-    var open = list[turn%player.length][0].split(":")[0]+" "+list[turn%player.length][0].split(":")[1]+"개 • "+player[turn%player.length]+" / "+(-1+list[turn%player.length].length)+"장";
-    z[turn%player.length] = open;
-    replier.reply(rmg+"공개한 카드  [ "+list[turn%player.length][0].split(":")[0]+" "+list[turn%player.length][0].split(":")[1]+"개 ]"+"\n"+z.join("\n")+"\n\n📄스택 : "+b.length);
-    list[turn%player.length].splice(0,1);
-    turn++;
-    replier.reply(rmg+"다음턴 : "+player[turn%player.length]);
-   }else{
-    replier.reply(rmg+"차례를 지켜주세요.\n"+player[turn%player.length]+"님의 턴입니다.");
-   }
-  }else{
-   if(fail.indexOf(sender)==-1){
-    replier.reply(rmg+"참가자가 아닙니다.");
-   }else{
-    replier.reply(rmg+"탈락하셨습니다.");
-   }
-  }
- }else if(cmd=="종"){
-  if(player.indexOf(sender)==-1&&st==false) return;
-  if(added[0]==5||added[1]==5||added[2]==5||added[3]==5){
-   replier.reply(sender+"님께서 "+b.length+"장의 카드를 가져가셨습니다.");
-   list[player.indexOf(sender)] = (list[player.indexOf(sender)].join(",")+","+b.join(",")).split(",");
-   z = [];
-   added = [0,0,0,0];
-   turn = player.indexOf(sender);
-   b = [];
-   var fd = false;
-   if(f[player.indexOf(sender)]==1){
-    f[player.indexOf(sender)] = 0;
-    var fl = [];
-    for(var i = 0; i<player.length; i++){
-     if(f[i]==1){
-      fl.push(player[i]);
-      fail.push(player[i]);
-      rank.push(player[i]);
-      fd = true;
-     }
-    }
-    if(fd==true) replier.reply(rmg+fl.join(", ")+"님께서 탈락하셨습니다.");
-    for(var j = 0; j<fl.length; j++){
-     player.splice(player.indexOf(fl[i]),1);
-    }
-   }else{
-    var fd = false;
-    var fl = [];
-    for(var i = 0; i<player.length; i++){
-     if(f[i]==1){
-      fd = true;
-      fl.push(player[i]);
-      fail.push(fail[i]);
-     }
-    }
-    if(fd==true) replier.reply(rmg+fl.join(", ")+"님께서 탈락하셨습니다.");
-    for(var j = 0; j<fl.length; j++){
-     player.splice(player.indexOf(fl[i]),1);
-    }
-   }
-   if(pn==2&&fail.length==1){
-    replier.reply(rmg+"게임이 종료되었습니다.\n1st : "+player+"\n2nd : "+fail);
-    reset();
-   }else if(pn==3&&fail.length==2){
-    replier.reply(rmg+"게임이 종료되었습니다.\n1st : "+player+"\n2nd : "+rank[1]+"\n3rd : "+rank[0]);
-    reset();
-   }else if(pn==4&&fail.length==3){
-    replier.reply(rmg+"게임이 종료되었습니다.\n1st : "+player+"\n2nd : "+rank[2]+"\n3rd : "+rank[1]+"\n4th : "+rank[2]);
-    reset();
-   }
-   var w = fail;
-   if(player.length!=0) replier.reply(rmg+player[turn%player.length]+"님 차례입니다.");
-  }else{
-   replier.reply(rmg+sender+"님이 모두에게 카드를 1장씩 기부했습니다.\n"+list[player.indexOf(sender)].length+"장 -> "+(list[player.indexOf(sender)].length-player.length+1)+"장");
-   for(var i = 0; i<4; i++){
-    if(typeof player[i]!="undefined"){
-     if(list[player.indexOf(sender)].length<=0){
-      if(f[player.indexOf(sender)]==0){
-       replier.reply(rmg+sender+"님의 카드가 모두 소진되었습니다.");
-       f[player.indexOf(sender)] = 1;
-      }else{
-       replier.reply(rmg+sender+"님께서 탈락하셨습니다.");
-       fail.push(sender);
-       rank.push(sender);
-       player.splice(player.indexOf(sender), 1);
-      }
-     }else{
-      list[i].push(list[player.indexOf(sender)][0]);
-      list[player.indexOf(sender)].splice(0,1);
-     }
-    }
-   }
-  }
-  //클래식 끝
- }else if(cmd=="방생성"){
-  if(FileStream.read("/sdcard/ARCADE/HA/PLAYERS/"+code+"/JOINING.txt")==null||FileStream.read("/sdcard/ARCADE/HA/PLAYERS/"+code+"/JOINING.txt")==""){
-   cR();
-  }else{
-   replier.reply(rmg+"이미 접속중인 다른방이 있습니다.\n방 이름 : "+FileStream.read("/sdcard/ARCADE/HA/PLAYERS/"+code+"/JOINING.txt"));
-  }
- }else if(cmd.indexOf("방생성::")==0){
-  if(FileStream.read("/sdcard/ARCADE/HA/PLAYERS/"+code+"/JOINING.txt")==null||FileStream.read("/sdcard/ARCADE/HA/PLAYERS/"+code+"/JOINING.txt")==""){
-   var d = cmd.substr(5);
-   d = d.split("::");
-   cR(d[0], d[1], d[2], d[3]);
-  }else{
-   replier.reply(rmg+"이미 접속중인 다른방이 있습니다.\n방 이름 : "+FileStream.read("/sdcard/ARCADE/HA/PLAYERS/"+code+"/JOINING.txt"));
-  }
- }else if(cmd.indexOf("방입장 ")==0){
-  if(FileStream.read("/sdcard/ARCADE/HA/PLAYERS/"+code+"/JOINING.txt")==null||FileStream.read("/sdcard/ARCADE/HA/PLAYERS/"+code+"/JOINING.txt")==""){
-   var jr = cmd.substr(4);
-   if(room_list.split("\n").indexOf(jr)!=-1){
-    if(FileStream.read("/sdcard/ARCADE/HA/ROOMS/"+jr+"/PLAYER.txt").split("\n").length==FileStream.read("/sdcard/ARCADE/HA/ROOMS/"+jr+"/MAX.txt")){
-     replier.reply(rmg+"방이 꽉 차서 입장할 수 없습니다.");
-    }else{
-     var plst = FileStream.read("/sdcard/ARCADE/HA/ROOMS/"+jr+"/PLAYER.txt").split("\n");
-     if(plst.indexOf(code+"/".repeat(21))==-1){
-      if(FileStream.read("/sdcard/ARCADE/HA/ROOMS/"+jr+"/PW.txt")!=""){
-       replier.reply(rmg+"잠겨있는 방입니다.\n\""+cmg+"방입장::(방이름)::(비밀번호)\" 를 입력하여 입장해 주세요.");
-      }else{
-       replier.reply(rmg+"방에 입장하였습니다.");
-       FileStream.write("/sdcard/ARCADE/HA/PLAYERS/"+code+"/JOINING.txt", jr);
-       FileStream.append("/sdcard/ARCADE/HA/ROOMS/"+jr+"/PL.txt", (FileStream.read("/sdcard/ARCADE/HA/ROOMS/"+jr+"/PL.txt").split("\n").length==0?"":"\n")+code+"/".repeat(21)+sender);
-      }
-     }else{
-      replier.reply(rmg+"이미 방에 입장한 상태입니다.");
-     }
-    }
-   }else{
-    replier.reply(rmg+"찾을 수 없는 방입니다.");
-   }
-  }else{
-   replier.reply(rmg+"이미 접속중인 다른방이 있습니다.\n방 이름 : "+FileStream.read("/sdcard/ARCADE/HA/PLAYERS/"+code+"/JOINING.txt"));
-  }
- }else if(cmd.indexOf("방입장::")==0){
-  if(FileStream.read("/sdcard/ARCADE/HA/PLAYERS/"+code+"/JOINING.txt")==null||FileStream.read("/sdcard/ARCADE/HA/PLAYERS/"+code+"/JOINING.txt")==""){
-   var jr = cmd.substr(5);
-   br = jr.split("::")[1];
-   jr = jr.split("::")[0];
-   if(room_list.split("\n").indexOf(jr)!=-1){
-    if(FileStream.read("/sdcard/ARCADE/HA/ROOMS/"+jr+"/PLAYER.txt").split("\n").length==FileStream.read("/sdcard/ARCADE/HA/ROOMS/"+jr+"/MAX.txt")){
-     replier.reply(rmg+"방이 꽉 차서 입장할 수 없습니다.");
-    }else{
-     var plst = FileStream.read("/sdcard/ARCADE/HA/ROOMS/"+jr+"/PLAYER.txt").split("\n");
-     if(plst.indexOf(code+"/".repeat(21))==-1){
-      if(FileStream.read("/sdcard/ARCADE/HA/ROOMS/"+jr+"/PW.txt")!=""){
-       if(FileStream.read("/sdcard/ARCADE/HA/ROOMS/"+jr+"/PW.txt")==br){
-        replier.reply(rmg+"방에 입장하였습니다.");
-        FileStream.write("/sdcard/ARCADE/HA/PLAYERS/"+code+"/JOINING.txt", jr);
-       }else{
-        replier.reply(rmg+"비밀번호가 일치하지 않습니다.");
-       }
-      }else{
-       replier.reply(rmg+"방에 입장하였습니다.");
-       FileStream.write("/sdcard/ARCADE/HA/PLAYERS/"+code+"/JOINING.txt", jr);
-       FileStream.append("/sdcard/ARCADE/HA/ROOMS/"+jr+"/PL.txt", (FileStream.read("/sdcard/ARCADE/HA/ROOMS/"+jr+"/PL.txt").split("\n").length==0?"":"\n")+code+"/".repeat(21)+sender);
-      }
-     }else{
-      replier.reply(rmg+"이미 방에 입장한 상태입니다.");
-     }
-    }
-   }else{
-    replier.reply(rmg+"찾을 수 없는 방입니다.");
-   }
-  }else{
-   replier.reply(rmg+"이미 접속중인 다른방이 있습니다.\n방 이름 : "+FileStream.read("/sdcard/ARCADE/HA/PLAYERS/"+code+"/JOINING.txt"));
-  }
- }else if(cmd=="방목록"){
-  if(room_list!=""){
-   var rlst = [];
-   for(var i = 0; i<room_list.split("\n").length; i++){
-    rlst.push("방 이름 : "+room_list.split("\n")[i]+"\n최소인원 : "+FileStream.read("/sdcard/ARCADE/HA/ROOMS/"+room_list.split("\n")[i]+"/MIN.txt")+"명\n최대인원 : "+FileStream.read("/sdcard/ARCADE/HA/ROOMS/"+room_list.split("\n")[i]+"/MAX.txt")+"명\n현재인원 : "+(FileStream.read("/sdcard/ARCADE/HA/ROOMS/Untitled1/PL.txt").split("\n").length)+"/"+FileStream.read("/sdcard/ARCADE/HA/ROOMS/"+room_list.split("\n")[i]+"/MAX.txt")+"\n호스트 : "+FileStream.read("/sdcard/ARCADE/HA/ROOMS/"+room_list.split("\n")[i]+"/OWNER.txt"));
-   }
-   replier.reply(rmg+"방 목록 ("+(room_list.split("\n").length)+"개)"+all+"\n\n\n"+"━".repeat(12)+"\n"+rlst.join("\n"+"━".repeat(12)+"\n")+"\n"+"━".repeat(12));
-  }else{
-   replier.reply(rmg+"방 목록이 비어있습니다.");
-  }
-  //커스텀 끝
- }else if(cmd=="리셋"){
-  if(admin.indexOf(code)!=-1){
-   replier.reply(rmg+"리셋 완료.");
-   reset();
-  }else{
-   replier.reply(rmg+"관리자가 아닙니다.");
-  }
- }else if(cmd=="리로드"&&admin.indexOf(code)!=-1){
-  if(admin.indexOf(code)!=-1){
-   replier.reply(rmg+"스크립트를 리로드합니다.");
-   Api.reload();
-  }else{
-   replier.reply(rmg+"관리자가 아닙니다.");
-  }
- }else if(cmd=="끄기"&&admin.indexOf(code)!=-1){
-  on = false;
-  replier.reply(rmg+"꺼짐");
- }else if(cmd=="관리자신청"&&admin.indexOf(code)==-1){
-  if(admin.length==0){
-   replier.reply(rmg+"관리자를 등록하셨습니다.");
-   FileStream.write("/sdcard/ARCADE/HA/ADMIN.txt", code);
-  }else{
-   if(sp==""){
-    if(admin.indexOf(code)==-1){
-     replier.reply(rmg+"관리자를 신청했습니다.");
-     sp = code;
-     sn = sender;
-    }else{
-     replier.reply(rmg+"이미 관리자 입니다.");
-    }
-   }else{
-    replier.reply(rmg+"또다른 신청자가 있습니다.");
-   }
-  }
- }else if(cmd=="관리자수락"){
-  if(admin.indexOf(code)!=-1){
-   if(sp!=""){
-    replier.reply(rmg+sn+"님의 관리자 수락이 완료되었습니다.");
-    sn = "";
-    sp = "";
-    FileStream.append("/sdcard/ARCADE/HA/ADMIN.txt", "\n"+code);
-   }else{
-    replier.reply(rmg+"관리자 신청자가 없습니다.");
-   }
-  }else{
-   replier.reply(rmg+"관리자가 아닙니다");
-  }
- }else if(cmd=="관리자거절"){
-  if(admin.indexOf(code)!=-1){
-   replier.reply(rmg+sn+"님의 관리자 신청이 거절되었습니다.");
-   sn = "";
-   sp = "";
-  }else{
-   replier.reply(rmg+"관리자가 아닙니다.");
-  }
- }else if(cmd=="관리자신청자"){
-  replier.reply(rmg+"관리자 신청자 : "+sn);
- }
-}
+<p>//할리갈리 v2.5</p>
+<p>var cards = ["🍌:1", "🍌:1", "🍌:1", "🍌:1", "🍌:1", "🍌:2", "🍌:2", "🍌:2", "🍌:3", "🍌:3", "🍌:3", "🍌:4", "🍌:4", "🍌:5", "🍓:1", "🍓:1", "🍓:1", "🍓:1", "🍓:1", "🍓:2", "🍓:2", "🍓:2", "🍓:3", "🍓:3", "🍓:3", "🍓:4", "🍓:4", "🍓:5", "🍈:1", "🍈:1", "🍈:1", "🍈:1", "🍈:1", "🍈:2", "🍈:2", "🍈:2", "🍈:3", "🍈:3", "🍈:3", "🍈:4", "🍈:4", "🍈:5", "🍑:1", "🍑:1", "🍑:1", "🍑:1", "🍑:1", "🍑:2", "🍑:2", "🍑:2", "🍑:3", "🍑:3", "🍑:3", "🍑:4", "🍑:4", "🍑:5"]; var player = [];</p>
+<p>var all = "u200b".repeat(500);</p>
+<p>var own = {};</p>
+<p>var cmg = "/";</p>
+<p>var z = [];</p>
+<p>var rmg = "[!] ";</p>
+<p>var turn = 0;</p>
+<p>var added = [0,0,0,0];</p>
+<p>var b = [];</p>
+<p>var b2 = [];</p>
+<p>var t1 = 0;</p>
+<p>var t2 = 0;</p>
+<p>var st = false;</p>
+<p>var f = [0,0,0,0];</p>
+<p>var rank = [];</p>
+<p>var fail = [];</p>
+<p>var pn;</p>
+<p>var admin = FileStream.read("/sdcard/ARCADE/HA/ADMIN.txt"); var on = true;</p>
+<p>var sp = "";</p>
+<p>var sn = "";</p>
+<p>sum=(lst)=>{var r = 0; for(var i = 0; i<lst.length; i++){ r+=Number(lst[i]) } return r;}; function shuffle(a) { var j, x, i; for (i = a.length; i; i -= 1) { j = Math.floor(Math.random() * i); x = a[i - 1]; a[i - 1] = a[j]; a[j] = x; } return a;}; function setCards(x){</p>
+<p>var cards = ["🍌:1", "🍌:1", "🍌:1", "🍌:1", "🍌:1", "🍌:2", "🍌:2", "🍌:2", "🍌:3", "🍌:3", "🍌:3", "🍌:4", "🍌:4", "🍌:5", "🍓:1", "🍓:1", "🍓:1", "🍓:1", "🍓:1", "🍓:2", "🍓:2", "🍓:2", "🍓:3", "🍓:3", "🍓:3", "🍓:4", "🍓:4", "🍓:5", "🍈:1", "🍈:1", "🍈:1", "🍈:1", "🍈:1", "🍈:2", "🍈:2", "🍈:2", "🍈:3", "🍈:3", "🍈:3", "🍈:4", "🍈:4", "🍈:5", "🍑:1", "🍑:1", "🍑:1", "🍑:1", "🍑:1", "🍑:2", "🍑:2", "🍑:2", "🍑:3", "🍑:3", "🍑:3", "🍑:4", "🍑:4", "🍑:5"]; var c = shuffle(cards);</p>
+<p>var list = [[],[],[],[]];</p>
+<p>var pc = Math.floor(cards.length/x);</p>
+<p>for(var i = 0; i<pc*x; i++){</p>
+<p>if(i<pc){</p>
+<p>list[0].push(cards[0]);</p>
+<p>}else if(i>=pc&&i<pc*2){</p>
+<p>list[1].push(cards[0]);</p>
+<p>}else if(i>=pc*2&&i<pc*3){</p>
+<p>list[2].push(cards[0]);</p>
+<p>}else{</p>
+<p>list[3].push(cards[0]);</p>
+<p>} c.splice(0,1);</p>
+<p>} return list;</p>
+<p>} function reset(){</p>
+<p>z = [];</p>
+<p>cards = ["🍌:1", "🍌:1", "🍌:1", "🍌:1", "🍌:1", "🍌:2", "🍌:2", "🍌:2", "🍌:3", "🍌:3", "🍌:3", "🍌:4", "🍌:4", "🍌:5", "🍓:1", "🍓:1", "🍓:1", "🍓:1", "🍓:1", "🍓:2", "🍓:2", "🍓:2", "🍓:3", "🍓:3", "🍓:3", "🍓:4", "🍓:4", "🍓:5", "🍈:1", "🍈:1", "🍈:1", "🍈:1", "🍈:1", "🍈:2", "🍈:2", "🍈:2", "🍈:3", "🍈:3", "🍈:3", "🍈:4", "🍈:4", "🍈:5", "🍑:1", "🍑:1", "🍑:1", "🍑:1", "🍑:1", "🍑:2", "🍑:2", "🍑:2", "🍑:3", "🍑:3", "🍑:3", "🍑:4", "🍑:4", "🍑:5"]; player = [];</p>
+<p>turn = 0;</p>
+<p>added = [0,0,0,0];</p>
+<p>b = [];</p>
+<p>b2 = [];</p>
+<p>t1 = [];</p>
+<p>list = [[],[],[],[]];</p>
+<p>t2 = [];</p>
+<p>st = false;</p>
+<p>f = [0,0,0,0];</p>
+<p>rank = [];</p>
+<p>fail = [];</p>
+<p>} function response(room, msg, sender, isGroupChat, replier, ImageDB) { admin = FileStream.read("/sdcard/ARCADE/HA/ADMIN.txt"); var room_list = FileStream.read("/sdcard/ARCADE/HA/ROOMS/LIST.txt"); if(room_list==null) room_list = "";</p>
+<p>if(room_list.split("n").length==100){</p>
+<p>replier.reply(rmg+"100개 초과로 방을 생성할 수 없습니다."); return;</p>
+<p>} var code = (java.lang.String(ImageDB.getProfileImage()).hashCode()).toString(); function cR(x, y, z, w){</p>
+<p>var mode_l = ["Classic"];</p>
+<p>var code2 = (java.lang.String(ImageDB.getProfileImage()).hashCode()).toString(); if(room_list==""&&typeof x=="undefined"&&typeof y=="undefined"&&typeof z=="undefined"&&typeof w=="undefined"){ FileStream.write("/sdcard/ARCADE/HA/ROOMS/LIST.txt", "Untitled1"); replier.reply(rmg+"방을 생성하였습니다.n방 이름 : Untitled1n최소인원 : 2n최대인원 : 4n비밀번호 :n게임모드 : Classic"); FileStream.write("/sdcard/ARCADE/HA/ROOMS/Untitled1/OWNER.txt", sender); FileStream.write("/sdcard/ARCADE/HA/ROOMS/Untitled1/OWNERC.txt", code); FileStream.write("/sdcard/ARCADE/HA/ROOMS/Untitled1/PW.txt", ""); FileStream.write("/sdcard/ARCADE/HA/ROOMS/Untitled1/GM.txt", "Classic"); FileStream.write("/sdcard/ARCADE/HA/ROOMS/Untitled1/MIN.txt", 2); FileStream.write("/sdcard/ARCADE/HA/ROOMS/Untitled1/MAX.txt", 4); FileStream.write("/sdcard/ARCADE/HA/ROOMS/Untitled1/PL.txt", code+"/".repeat(21)+sender); FileStream.write("/sdcard/ARCADE/HA/PLAYERS/"+code+"/JOINING.txt", "Untitiled1"); }else if(typeof x=="undefined"&&typeof y=="undefined"&&typeof z=="undefined"&&typeof w=="undefined"){ FileStream.append("/sdcard/ARCADE/HA/ROOMS/LIST.txt", (room_list==""?"":"n")+"Untitled"+(room_list.split("n").length+1)); replier.reply(rmg+"방을 생성하였습니다.n방 이름 : Untitled"+(room_list.split("n").length+1)+"n최소인원 : 2n최대인원 : 4n비밀번호 :n게임모드 : Classic"); FileStream.write("/sdcard/ARCADE/HA/ROOMS/Untitled"+(room_list.split("n").length+1)+"/OWNER.txt", sender); FileStream.write("/sdcard/ARCADE/HA/ROOMS/Untitled"+(room_list.split("n").length+1)+"/OWNERC.txt", code); FileStream.write("/sdcard/ARCADE/HA/ROOMS/Untitled"+(room_list.split("n").length+1)+"/PW.txt", ""); FileStream.write("/sdcard/ARCADE/HA/ROOMS/Untitled"+(room_list.split("n").length+1)+"/GM.txt", "Classic"); FileStream.write("/sdcard/ARCADE/HA/ROOMS/Untitled"+(room_list.split("n").length+1)+"/MIN.txt", 2); FileStream.write("/sdcard/ARCADE/HA/ROOMS/Untitled"+(room_list.split("n").length+1)+"/MAX.txt", 4); FileStream.write("/sdcard/ARCADE/HA/PLAYERS/"+code+"/JOINING.txt", "Untitled"+(room_list.split("n").length+1)); FileStream.write("/sdcard/ARCADE/HA/ROOMS/Untitled"+(room_list.split("n").length+1)+"/PL.txt", code+"/".repeat(21)+sender); }else{</p>
+<p>if(room_list.split("n").indexOf(x)==-1){ if(x.includes("\")||x.includes("/")||x.includes(".")||x.includes(";")){ if(x.length>0&&x.length<21){</p>
+<p>replier.reply(rmg+"방 이름은 \, /, ;, . 을 포함할 수 없습니다."); }else{</p>
+<p>replier.reply(rmg+"방 이름은 1~20자만 가능합니다."); } }else{</p>
+<p>if(typeof x=="undefined"&&typeof y=="undefined"){ FileStream.append("/sdcard/ARCADE/HA/ROOMS/LIST.txt", (room_list==""?"":"n")+(typeof x=="undefined"?"Untitled"+(room_list.split("n").length+1):x)); replier.reply(rmg+"방을 생성하였습니다.n방 이름 : "+(typeof x=="undefined"?"Untitled"+(room_list.split("n").length+1):x)+"n최소인원 : "+(typeof y=="undefined"||isNaN(Number(y.split(".")[0]))?2:Number(y.split(".")[0]))+"n최대인원 : "+(typeof y=="undefined"||isNaN(Number(y.split(".")[0]))?4:Number(y.split(".")[1]))+"n비밀번호 : "+(typeof z=="undefined"?"":z)+"n게임모드 : "+(typeof w=="undefined"&&(w>-1&&w<mode_l.length&&false==(isNaN(Number(w))))?"Classic":mode_l[w])); FileStream.write("/sdcard/ARCADE/HA/ROOMS/"+(typeof x=="undefined"?"Untitled"+(room_list.split("n").length+1):x)+"/OWNER.txt", sender); FileStream.write("/sdcard/ARCADE/HA/ROOMS/"+(typeof x=="undefined"?"Untitled"+(room_list.split("n").length+1):x)+"/OWNERC.txt", code); FileStream.write("/sdcard/ARCADE/HA/ROOMS/"+(typeof x=="undefined"?"Untitled"+(room_list.split("n").length+1):x)+"/PW.txt", (typeof z=="undefined"?"":z)); FileStream.write("/sdcard/ARCADE/HA/ROOMS/"+(typeof x=="undefined"?"Untitled"+(room_list.split("n").length+1):x)+"/GM.txt", (typeof w=="undefined"&&(w>-1&&w<mode_l.length&&false==(isNaN(Number(w))))?"Classic":mode_l[w])); FileStream.write("/sdcard/ARCADE/HA/ROOMS/"+(typeof x=="undefined"?"Untitled"+(room_list.split("n").length+1):x)+"/MIN.txt", (typeof y=="undefined"||isNaN(Number(y.split(".")[0]))?2:Number(y.split(".")[0]))); FileStream.write("/sdcard/ARCADE/HA/ROOMS/"+(typeof x=="undefined"?"Untitled"+(room_list.split("n").length+1):x)+"/MAX.txt", (typeof y=="undefined"||isNaN(Number(y.split(".")[0]))?4:Number(y.split(".")[1]))); FileStream.write("/sdcard/ARCADE/HA/PLAYERS/"+code+"/JOINING.txt", (typeof x=="undefined"?"Untitled"+(room_list.split("n").length+1):x)); FileStream.write("/sdcard/ARCADE/HA/ROOMS/"+(typeof x=="undefined"?"Untitled"+(room_list.split("n").length+1):x)+"/PL.txt", code+"/".repeat(21)+sender); }else{</p>
+<p>if(x=="@Code"&&y[0]=="@"&&typeof z=="undefined"&&typeof w=="undefined"){ var mcod = y.substr(1);</p>
+<p>mcod = mcod.split(";");</p>
+<p>var error = "";</p>
+<p>var o_room = "Untitled"+(room_list.split("n").length+1); var o_min = 2;</p>
+<p>var o_max = 4;</p>
+<p>var o_pw = "";</p>
+<p>var o_gm = "Classic";</p>
+<p>try{</p>
+<p>for(var i = 0; i<mcod.length; i++){</p>
+<p>if(mcod[i].split("=")[0]=="ROOM_NAME"){</p>
+<p>if(mcod[i].split("=")[1].includes("\")||mcod[i].split("=")[1].includes("/")||mcod[i].split("=")[1].includes(".")||mcod[i].split("=")[1].includes(";")||mcod[i].split("=")[1].includes(":")){ error = "방 이름은 \, /, ;, :, . 을 포함할 수 없습니다.n• line : "+(i+1); replier.reply(rmg+error);</p>
+<p>return;</p>
+<p>}else{</p>
+<p>if(mcod[i].split("=")[1].length>0&&mcod[i].split("=")[1].length<21){ o_room = mcod[i].split("=")[1];</p>
+<p>}else{</p>
+<p>if(room_list.split("n").indexOf(mcod[i].split("=")[1])==-1){ error = "방 이름의 길이는 1~20자 여야합니다.n• line : "+(i+1); replier.reply(rmg+error);</p>
+<p>return;</p>
+<p>}else{</p>
+<p>error = "중복된 방 이름입니다.n• line : "+(i+1); replier.reply(rmg+error);</p>
+<p>return;</p>
+<p>} } } }else if(mcod[i].split("=")[0]=="MIN"){</p>
+<p>if(isNaN(Number(mcod[i].split("=")[1]))){ error = "최소인원은 숫자여야 합니다.n• line : "+(i+1); replier.reply(rmg+error);</p>
+<p>return;</p>
+<p>}else{</p>
+<p>if(Number(mcod[i].split("=")[1])<1){</p>
+<p>error = "최소인원인 1이 최솟값입니다.n• line : "+(i+1); replier.reply(rmg+error);</p>
+<p>return;</p>
+<p>}else{</p>
+<p>o_min = Number(mcod[i].split("=")[1]);</p>
+<p>} } }else if(mcod[i].split("=")[0]=="MAX"){</p>
+<p>if(isNaN(Number(mcod[i].split("=")[1]))){ error = "최대인원은 숫자여야 합니다.n• line : "+(i+1); replier.reply(rmg+error);</p>
+<p>return;</p>
+<p>}else{</p>
+<p>o_max = Number(mcod[i].split("=")[1]);</p>
+<p>} }else if(mcod[i].split("=")[0]=="PASSWORD"){ if(mcod[i].split("=")[1].includes("\")||mcod[i].split("=")[1].includes("/")||mcod[i].split("=")[1].includes(".")||mcod[i].split("=")[1].includes(";")||mcod[i].split("=")[1].includes(":")){ error = "비밀번호는 \, /, ;, :, . 을 포함할 수 없습니다.n• line : "+(i+1); replier.reply(rmg+error);</p>
+<p>return;</p>
+<p>}else{</p>
+<p>o_pw = mcod[i].split("=")[1];</p>
+<p>} }else if(mcod[i].split("=")[0]=="GAME_MODE"){ if(isNaN(Number(mcod[i].split("=")[1]))){ error = "게임모드는 번호여야 합니다.n• line : "+(i+1); replier.reply(rmg+error);</p>
+<p>return;</p>
+<p>}else{</p>
+<p>if(Number(mcod[i].split("=")[1])>-1||Number(mcod[i].split("=")[1])<mode_l.length){ error = "유효하지 않은 게임모드입니다.n• line : "+(i+1); replier.reply(rmg+error);</p>
+<p>return;</p>
+<p>}else{</p>
+<p>o_gm = mode_l[Number(mcod[i].split("=")[1])]; } } } } if(o_max<o_min){</p>
+<p>error = "최소인원이 최대인원 보다 클수 없습니다.n• line : "+(i+1); replier.reply(rmg+error);</p>
+<p>return;</p>
+<p>} replier.reply(rmg+"방을 생성하였습니다.n방 이름 : "+o_room+"n최소인원 : "+o_min+"n최대인원 : "+o_max+"n비밀번호 : "+o_pw+"n게임모드 : "+o_gm); FileStream.append("/sdcard/ARCADE/HA/ROOMS/LIST.txt", (room_list==""?"":"n")+o_room); FileStream.write("/sdcard/ARCADE/HA/ROOMS/"+o_room+"/OWNER.txt", sender); FileStream.write("/sdcard/ARCADE/HA/ROOMS/"+o_room+"/OWNERC.txt", code); FileStream.write("/sdcard/ARCADE/HA/ROOMS/"+o_room+"/PW.txt", o_pw); FileStream.write("/sdcard/ARCADE/HA/ROOMS/"+o_room+"/GM.txt", o_gm); FileStream.write("/sdcard/ARCADE/HA/ROOMS/"+o_room+"/MIN.txt", o_min); FileStream.write("/sdcard/ARCADE/HA/ROOMS/"+o_room+"/MAX.txt", o_max); FileStream.write("/sdcard/ARCADE/HA/PLAYERS/"+code+"/JOINING.txt", o_room); FileStream.write("/sdcard/ARCADE/HA/ROOMS/"+o_room+"/PL.txt", code+"/".repeat(21)+sender); }catch(e){</p>
+<p>replier.reply(rmg+"코드 적용 도중 에러가 발생했습니다."); return;</p>
+<p>} }else{</p>
+<p>if((typeof y=="undefined"||isNaN(Number(y.split(".")[0]))?2:Number(y.split(".")[0]))>(typeof y=="undefined"||y.indexOf(".")==-1||isNaN(Number(y.split(".")[1]))?4:Number(y.split(".")[1]))){ replier.reply(rmg+"최소인원이 최대인원보다 클수 없습니다."); return</p>
+<p>} FileStream.append("/sdcard/ARCADE/HA/ROOMS/LIST.txt", (room_list==""?"":"n")+(typeof x=="undefined"?"Untitled"+(room_list.split("n").length+1):x)); replier.reply(rmg+"방을 생성하였습니다.n방 이름 : "+(typeof x=="undefined"?"Untitled"+(room_list.split("n").length+1):x)+"n최소인원 : "+(typeof y=="undefined"||isNaN(Number(y.split(".")[0]))?2:Number(y.split(".")[0]))+"n최대인원 : "+(typeof y=="undefined"||y.indexOf(".")==-1||isNaN(Number(y.split(".")[1]))?4:Number(y.split(".")[1]))+"n비밀번호 : "+(typeof z=="undefined"?"":z)+"n게임모드 : "+(typeof w!="undefined"&&(w>-1&&w<1&&false==(isNaN(Number(w))))?mode_l[w]:"Classic")); FileStream.write("/sdcard/ARCADE/HA/ROOMS/"+(typeof x=="undefined"?"Untitled"+(room_list.split("n").length+1):x)+"/OWNER.txt", sender); FileStream.write("/sdcard/ARCADE/HA/ROOMS/"+(typeof x=="undefined"?"Untitled"+(room_list.split("n").length+1):x)+"/OWNERC.txt", code); FileStream.write("/sdcard/ARCADE/HA/ROOMS/"+(typeof x=="undefined"?"Untitled"+(room_list.split("n").length+1):x)+"/PW.txt", (typeof z=="undefined"?"":z)); FileStream.write("/sdcard/ARCADE/HA/ROOMS/"+(typeof x=="undefined"?"Untitled"+(room_list.split("n").length+1):x)+"/GM.txt", (typeof w!="undefined"&&Number(w)>-1&&Number(w)<mode_l.length?mode_l[Number(w)]:"Classic")); FileStream.write("/sdcard/ARCADE/HA/ROOMS/"+(typeof x=="undefined"?"Untitled"+(room_list.split("n").length+1):x)+"/MIN.txt", (typeof y=="undefined"||isNaN(Number(y.split(".")[0]))?2:Number(y.split(".")[0]))); FileStream.write("/sdcard/ARCADE/HA/ROOMS/"+(typeof x=="undefined"?"Untitled"+(room_list.split("n").length+1):x)+"/MAX.txt", (typeof y=="undefined"||y.indexOf(".")==-1||isNaN(Number(y.split(".")[1]))?4:Number(y.split(".")[1]))); FileStream.write("/sdcard/ARCADE/HA/PLAYERS/"+code+"/JOINING.txt", (typeof x=="undefined"?"Untitled"+(room_list.split("n").length+1):x)); FileStream.write("/sdcard/ARCADE/HA/ROOMS/"+(typeof x=="undefined"?"Untitled"+(room_list.split("n").length+1):x)+"/PL.txt", code+"/".repeat(21)+sender); } } } }else{</p>
+<p>replier.reply(rmg+"같은 방 이름이 이미 존재합니다."); } } } var cmd = msg.replace(cmg, "");</p>
+<p>if(cmd==msg) cmd = "";</p>
+<p>if(admin==null){</p>
+<p>admin = [];</p>
+<p>}else{</p>
+<p>admin = admin.split("n");</p>
+<p>} if(cmd=="켜기"){</p>
+<p>if(admin.indexOf(code)!=-1){</p>
+<p>on = true;</p>
+<p>replier.reply(rmg+"켜짐");</p>
+<p>}else{</p>
+<p>replier.reply(rmg+"관리자가 아닙니다."); } } if(on==false) return;</p>
+<p>if(cmd=="참가"){</p>
+<p>if(st==true){</p>
+<p>replier.reply(rmg+"게임이 진행중입니다."); }else{</p>
+<p>if(player.indexOf(sender)==-1){</p>
+<p>if(player.length==4){</p>
+<p>replier.reply(rmg+"방이 꽉 찼습니다."); }else{</p>
+<p>player.push(sender);</p>
+<p>replier.reply(rmg+"참가 하였습니다.n(참가 인원 : "+player.length+"/4)"); } }else{</p>
+<p>replier.reply(rmg+"참가중입니다."); } } }else if(cmd=="취소"){</p>
+<p>if(st==false){</p>
+<p>if(player.indexOf(sender)!=-1){</p>
+<p>player.splice(player.indexOf(sender),1); replier.reply(rmg+"취소 하였습니다.n(참가 인원 : "+player.length+"/4)"); }else{</p>
+<p>replier.reply(rmg+"참가자가 아닙니다."); } }else{</p>
+<p>replier.reply(rmg+"게임이 진행중입니다."); } }else if(cmd=="목록"){</p>
+<p>replier.reply((player.length==0?rmg+"참가자가 없습니다.":rmg+"참가자 ("+player.length+"명)"+(player.length>0?"n1 • "+player[0]:"")+(player.length>1?"n2 • "+player[1]:"")+(player.length>2?"n3 • "+player[2]:"")+(player.length>3?"n4 • "+player[3]:""))); }else if(cmd=="시작"){</p>
+<p>if(st==false){</p>
+<p>if(player.length>1){</p>
+<p>if(player.indexOf(sender)!=-1){</p>
+<p>st = true;</p>
+<p>list = setCards(player.length);</p>
+<p>pn = player.length;</p>
+<p>replier.reply(rmg+"게임이 시작되었습니다.n"+player[0]+"님의 차례입니다."); }else{</p>
+<p>replier.reply(rmg+"미참가자는 시작할 수 없습니다."); } }else{</p>
+<p>replier.reply(rmg+"최소 인원은 2명입니다."); } }else{</p>
+<p>replier.reply(rmg+"진행중인 게임이 있습니다."); } }else if(cmd=="공개"){</p>
+<p>if(st==false){</p>
+<p>replier.reply(rmg+"시작된 게임이 없습니다."); return;</p>
+<p>} if(player.indexOf(sender)!=-1){</p>
+<p>if(sender==player[turn%player.length]){</p>
+<p>if(1>list[turn%player.length].length){</p>
+<p>f[turn%player.length] = 1;</p>
+<p>replier.reply(rmg+"현재 공개 가능한 카드가 없습니다.n다음으로 턴을 넘깁니다 : "+player[(turn+1%player.length)]); turn++;</p>
+<p>}else{</p>
+<p>f[turn%player.length] = 0;</p>
+<p>for(var i = 0; i<player.length; i++){</p>
+<p>if(list[i].length<1){</p>
+<p>fail.push(player[i]);</p>
+<p>rank.push(player[i]);</p>
+<p>replier.reply(rmg+player[i]+"님이 탈락하셨습니다."); player.splice(player.indexOf(player[i]),1); if(pn==2&&fail.length==1){</p>
+<p>replier.reply(rmg+"게임이 종료되었습니다.n1st : "+player+"n2nd : "+fail); reset();</p>
+<p>}else if(pn==3&&fail.length==2){</p>
+<p>replier.reply(rmg+"게임이 종료되었습니다.n1st : "+player+"n2nd : "+rank[1]+"n3rd : "+rank[0]); reset();</p>
+<p>}else if(pn==4&&fail.length==3){</p>
+<p>replier.reply(rmg+"게임이 종료되었습니다.n1st : "+player+"n2nd : "+rank[2]+"n3rd : "+rank[1]+"n4th : "+rank[2]); reset();</p>
+<p>} } } } added = [0,0,0,0];</p>
+<p>b.push(list[turn%player.length][0]);</p>
+<p>for(var q = 0; q<(b.length>player.length?player.length:b.length); q++){ if(b[b.length-(q+1)].split(":")[0]=="🍌"){ added[0] += Number(b[b.length-(q+1)].split(":")[1]); }else if(b[b.length-(q+1)].split(":")[0]=="🍓"){ added[1] += Number(b[b.length-(q+1)].split(":")[1]); }else if(b[b.length-(q+1)].split(":")[0]=="🍈"){ added[2] += Number(b[b.length-(q+1)].split(":")[1]); }else{</p>
+<p>added[3] += Number(b[b.length-q-1].split(":")[1]); } } var open = list[turn%player.length][0].split(":")[0]+" "+list[turn%player.length][0].split(":")[1]+"개 • "+player[turn%player.length]+" / "+(-1+list[turn%player.length].length)+"장"; z[turn%player.length] = open;</p>
+<p>replier.reply(rmg+"공개한 카드  [ "+list[turn%player.length][0].split(":")[0]+" "+list[turn%player.length][0].split(":")[1]+"개 ]"+"n"+z.join("n")+"nn📄스택 : "+b.length); list[turn%player.length].splice(0,1);</p>
+<p>turn++;</p>
+<p>replier.reply(rmg+"다음턴 : "+player[turn%player.length]); }else{</p>
+<p>replier.reply(rmg+"차례를 지켜주세요.n"+player[turn%player.length]+"님의 턴입니다."); } }else{</p>
+<p>if(fail.indexOf(sender)==-1){</p>
+<p>replier.reply(rmg+"참가자가 아닙니다."); }else{</p>
+<p>replier.reply(rmg+"탈락하셨습니다."); } } }else if(cmd=="종"){</p>
+<p>if(player.indexOf(sender)==-1&&st==false) return; if(added[0]==5||added[1]==5||added[2]==5||added[3]==5){ replier.reply(sender+"님께서 "+b.length+"장의 카드를 가져가셨습니다."); list[player.indexOf(sender)] = (list[player.indexOf(sender)].join(",")+","+b.join(",")).split(","); z = [];</p>
+<p>added = [0,0,0,0];</p>
+<p>turn = player.indexOf(sender);</p>
+<p>b = [];</p>
+<p>var fd = false;</p>
+<p>if(f[player.indexOf(sender)]==1){</p>
+<p>f[player.indexOf(sender)] = 0;</p>
+<p>var fl = [];</p>
+<p>for(var i = 0; i<player.length; i++){</p>
+<p>if(f[i]==1){</p>
+<p>fl.push(player[i]);</p>
+<p>fail.push(player[i]);</p>
+<p>rank.push(player[i]);</p>
+<p>fd = true;</p>
+<p>} } if(fd==true) replier.reply(rmg+fl.join(", ")+"님께서 탈락하셨습니다."); for(var j = 0; j<fl.length; j++){</p>
+<p>player.splice(player.indexOf(fl[i]),1);</p>
+<p>} }else{</p>
+<p>var fd = false;</p>
+<p>var fl = [];</p>
+<p>for(var i = 0; i<player.length; i++){</p>
+<p>if(f[i]==1){</p>
+<p>fd = true;</p>
+<p>fl.push(player[i]);</p>
+<p>fail.push(fail[i]);</p>
+<p>} } if(fd==true) replier.reply(rmg+fl.join(", ")+"님께서 탈락하셨습니다."); for(var j = 0; j<fl.length; j++){</p>
+<p>player.splice(player.indexOf(fl[i]),1);</p>
+<p>} } if(pn==2&&fail.length==1){</p>
+<p>replier.reply(rmg+"게임이 종료되었습니다.n1st : "+player+"n2nd : "+fail); reset();</p>
+<p>}else if(pn==3&&fail.length==2){</p>
+<p>replier.reply(rmg+"게임이 종료되었습니다.n1st : "+player+"n2nd : "+rank[1]+"n3rd : "+rank[0]); reset();</p>
+<p>}else if(pn==4&&fail.length==3){</p>
+<p>replier.reply(rmg+"게임이 종료되었습니다.n1st : "+player+"n2nd : "+rank[2]+"n3rd : "+rank[1]+"n4th : "+rank[2]); reset();</p>
+<p>} var w = fail;</p>
+<p>if(player.length!=0) replier.reply(rmg+player[turn%player.length]+"님 차례입니다."); }else{</p>
+<p>replier.reply(rmg+sender+"님이 모두에게 카드를 1장씩 기부했습니다.n"+list[player.indexOf(sender)].length+"장 -> "+(list[player.indexOf(sender)].length-player.length+1)+"장"); for(var i = 0; i<4; i++){</p>
+<p>if(typeof player[i]!="undefined"){</p>
+<p>if(list[player.indexOf(sender)].length<=0){ if(f[player.indexOf(sender)]==0){</p>
+<p>replier.reply(rmg+sender+"님의 카드가 모두 소진되었습니다."); f[player.indexOf(sender)] = 1;</p>
+<p>}else{</p>
+<p>replier.reply(rmg+sender+"님께서 탈락하셨습니다."); fail.push(sender);</p>
+<p>rank.push(sender);</p>
+<p>player.splice(player.indexOf(sender), 1); } }else{</p>
+<p>list[i].push(list[player.indexOf(sender)][0]); list[player.indexOf(sender)].splice(0,1); } } } } //클래식 끝</p>
+<p>}else if(cmd=="방생성"){</p>
+<p>if(FileStream.read("/sdcard/ARCADE/HA/PLAYERS/"+code+"/JOINING.txt")==null||FileStream.read("/sdcard/ARCADE/HA/PLAYERS/"+code+"/JOINING.txt")==""){ cR();</p>
+<p>}else{</p>
+<p>replier.reply(rmg+"이미 접속중인 다른방이 있습니다.n방 이름 : "+FileStream.read("/sdcard/ARCADE/HA/PLAYERS/"+code+"/JOINING.txt")); } }else if(cmd.indexOf("방생성::")==0){ if(FileStream.read("/sdcard/ARCADE/HA/PLAYERS/"+code+"/JOINING.txt")==null||FileStream.read("/sdcard/ARCADE/HA/PLAYERS/"+code+"/JOINING.txt")==""){ var d = cmd.substr(5);</p>
+<p>d = d.split("::");</p>
+<p>cR(d[0], d[1], d[2], d[3]);</p>
+<p>}else{</p>
+<p>replier.reply(rmg+"이미 접속중인 다른방이 있습니다.n방 이름 : "+FileStream.read("/sdcard/ARCADE/HA/PLAYERS/"+code+"/JOINING.txt")); } }else if(cmd.indexOf("방입장 ")==0){</p>
+<p>if(FileStream.read("/sdcard/ARCADE/HA/PLAYERS/"+code+"/JOINING.txt")==null||FileStream.read("/sdcard/ARCADE/HA/PLAYERS/"+code+"/JOINING.txt")==""){ var jr = cmd.substr(4);</p>
+<p>if(room_list.split("n").indexOf(jr)!=-1){ if(FileStream.read("/sdcard/ARCADE/HA/ROOMS/"+jr+"/PLAYER.txt").split("n").length==FileStream.read("/sdcard/ARCADE/HA/ROOMS/"+jr+"/MAX.txt")){ replier.reply(rmg+"방이 꽉 차서 입장할 수 없습니다."); }else{</p>
+<p>var plst = FileStream.read("/sdcard/ARCADE/HA/ROOMS/"+jr+"/PLAYER.txt").split("n"); if(plst.indexOf(code+"/".repeat(21))==-1){ if(FileStream.read("/sdcard/ARCADE/HA/ROOMS/"+jr+"/PW.txt")!=""){ replier.reply(rmg+"잠겨있는 방입니다.n""+cmg+"방입장::(방이름)::(비밀번호)" 를 입력하여 입장해 주세요."); }else{</p>
+<p>replier.reply(rmg+"방에 입장하였습니다."); FileStream.write("/sdcard/ARCADE/HA/PLAYERS/"+code+"/JOINING.txt", jr); FileStream.append("/sdcard/ARCADE/HA/ROOMS/"+jr+"/PL.txt", (FileStream.read("/sdcard/ARCADE/HA/ROOMS/"+jr+"/PL.txt").split("n").length==0?"":"n")+code+"/".repeat(21)+sender); } }else{</p>
+<p>replier.reply(rmg+"이미 방에 입장한 상태입니다."); } } }else{</p>
+<p>replier.reply(rmg+"찾을 수 없는 방입니다."); } }else{</p>
+<p>replier.reply(rmg+"이미 접속중인 다른방이 있습니다.n방 이름 : "+FileStream.read("/sdcard/ARCADE/HA/PLAYERS/"+code+"/JOINING.txt")); } }else if(cmd.indexOf("방입장::")==0){ if(FileStream.read("/sdcard/ARCADE/HA/PLAYERS/"+code+"/JOINING.txt")==null||FileStream.read("/sdcard/ARCADE/HA/PLAYERS/"+code+"/JOINING.txt")==""){ var jr = cmd.substr(5);</p>
+<p>br = jr.split("::")[1];</p>
+<p>jr = jr.split("::")[0];</p>
+<p>if(room_list.split("n").indexOf(jr)!=-1){ if(FileStream.read("/sdcard/ARCADE/HA/ROOMS/"+jr+"/PLAYER.txt").split("n").length==FileStream.read("/sdcard/ARCADE/HA/ROOMS/"+jr+"/MAX.txt")){ replier.reply(rmg+"방이 꽉 차서 입장할 수 없습니다."); }else{</p>
+<p>var plst = FileStream.read("/sdcard/ARCADE/HA/ROOMS/"+jr+"/PLAYER.txt").split("n"); if(plst.indexOf(code+"/".repeat(21))==-1){ if(FileStream.read("/sdcard/ARCADE/HA/ROOMS/"+jr+"/PW.txt")!=""){ if(FileStream.read("/sdcard/ARCADE/HA/ROOMS/"+jr+"/PW.txt")==br){ replier.reply(rmg+"방에 입장하였습니다."); FileStream.write("/sdcard/ARCADE/HA/PLAYERS/"+code+"/JOINING.txt", jr); }else{</p>
+<p>replier.reply(rmg+"비밀번호가 일치하지 않습니다."); } }else{</p>
+<p>replier.reply(rmg+"방에 입장하였습니다."); FileStream.write("/sdcard/ARCADE/HA/PLAYERS/"+code+"/JOINING.txt", jr); FileStream.append("/sdcard/ARCADE/HA/ROOMS/"+jr+"/PL.txt", (FileStream.read("/sdcard/ARCADE/HA/ROOMS/"+jr+"/PL.txt").split("n").length==0?"":"n")+code+"/".repeat(21)+sender); } }else{</p>
+<p>replier.reply(rmg+"이미 방에 입장한 상태입니다."); } } }else{</p>
+<p>replier.reply(rmg+"찾을 수 없는 방입니다."); } }else{</p>
+<p>replier.reply(rmg+"이미 접속중인 다른방이 있습니다.n방 이름 : "+FileStream.read("/sdcard/ARCADE/HA/PLAYERS/"+code+"/JOINING.txt")); } }else if(cmd=="방목록"){</p>
+<p>if(room_list!=""){</p>
+<p>var rlst = [];</p>
+<p>for(var i = 0; i<room_list.split("n").length; i++){ rlst.push("방 이름 : "+room_list.split("n")[i]+"n최소인원 : "+FileStream.read("/sdcard/ARCADE/HA/ROOMS/"+room_list.split("n")[i]+"/MIN.txt")+"명n최대인원 : "+FileStream.read("/sdcard/ARCADE/HA/ROOMS/"+room_list.split("n")[i]+"/MAX.txt")+"명n현재인원 : "+(FileStream.read("/sdcard/ARCADE/HA/ROOMS/Untitled1/PL.txt").split("n").length)+"/"+FileStream.read("/sdcard/ARCADE/HA/ROOMS/"+room_list.split("n")[i]+"/MAX.txt")+"n호스트 : "+FileStream.read("/sdcard/ARCADE/HA/ROOMS/"+room_list.split("n")[i]+"/OWNER.txt")); } replier.reply(rmg+"방 목록 ("+(room_list.split("n").length)+"개)"+all+"nnn"+"━".repeat(12)+"n"+rlst.join("n"+"━".repeat(12)+"n")+"n"+"━".repeat(12)); }else{</p>
+<p>replier.reply(rmg+"방 목록이 비어있습니다."); } //커스텀 끝</p>
+<p>}else if(cmd=="리셋"){</p>
+<p>if(admin.indexOf(code)!=-1){</p>
+<p>replier.reply(rmg+"리셋 완료.");</p>
+<p>reset();</p>
+<p>}else{</p>
+<p>replier.reply(rmg+"관리자가 아닙니다."); } }else if(cmd=="리로드"&&admin.indexOf(code)!=-1){ if(admin.indexOf(code)!=-1){</p>
+<p>replier.reply(rmg+"스크립트를 리로드합니다."); Api.reload();</p>
+<p>}else{</p>
+<p>replier.reply(rmg+"관리자가 아닙니다."); } }else if(cmd=="끄기"&&admin.indexOf(code)!=-1){ on = false;</p>
+<p>replier.reply(rmg+"꺼짐");</p>
+<p>}else if(cmd=="관리자신청"&&admin.indexOf(code)==-1){ if(admin.length==0){</p>
+<p>replier.reply(rmg+"관리자를 등록하셨습니다."); FileStream.write("/sdcard/ARCADE/HA/ADMIN.txt", code); }else{</p>
+<p>if(sp==""){</p>
+<p>if(admin.indexOf(code)==-1){</p>
+<p>replier.reply(rmg+"관리자를 신청했습니다."); sp = code;</p>
+<p>sn = sender;</p>
+<p>}else{</p>
+<p>replier.reply(rmg+"이미 관리자 입니다."); } }else{</p>
+<p>replier.reply(rmg+"또다른 신청자가 있습니다."); } } }else if(cmd=="관리자수락"){</p>
+<p>if(admin.indexOf(code)!=-1){</p>
+<p>if(sp!=""){</p>
+<p>replier.reply(rmg+sn+"님의 관리자 수락이 완료되었습니다."); sn = "";</p>
+<p>sp = "";</p>
+<p>FileStream.append("/sdcard/ARCADE/HA/ADMIN.txt", "n"+code); }else{</p>
+<p>replier.reply(rmg+"관리자 신청자가 없습니다."); } }else{</p>
+<p>replier.reply(rmg+"관리자가 아닙니다"); } }else if(cmd=="관리자거절"){</p>
+<p>if(admin.indexOf(code)!=-1){</p>
+<p>replier.reply(rmg+sn+"님의 관리자 신청이 거절되었습니다."); sn = "";</p>
+<p>sp = "";</p>
+<p>}else{</p>
+<p>replier.reply(rmg+"관리자가 아닙니다."); } }else if(cmd=="관리자신청자"){</p>
+<p>replier.reply(rmg+"관리자 신청자 : "+sn); } } </p>
 </body>
