@@ -5,14 +5,24 @@
 </head>
 <body>
 	<div class="code">
-		<div class="code-box">
-			<img src="cs1.png" width="100%" style="border-top-right-radius: 5px; border-top-left-radius: 5px">
-			<h2 style="text-align: center">할리갈리</h2>
-			<center>
-				<br>
-				<a download href="cs1.txt"><input type="button" name="" style="" value="다운로드" class="btn1"></a>
-			</center>
-		</div>
+		<h1>KaKaoTalk</h1>
+		<hr noshade style="color: black; border-color: inherit;">
+		<br>
+		<script type="text/javascript">
+			var codes1 = ["할리갈리"];
+			var i = 0;
+			while(i<codes1.length){
+				document.write("<div class=\"code-box\">");
+				document.write("<img src=\"cs"+(i+1)+".png\" width=\"100%\" style=\"border-top-right-radius: 5px; border-top-left-radius: 5px\">");
+				document.write("<h2 style=\"text-align: center\">"+codes1[i]+"</h2>");
+				document.write("<center>");
+				document.write("<br>");
+				document.write("<a download href=\"cs"+(i+1)+".txt\"><input type=\"button\" name=\"\" style=\"\" value=\"다운로드\" class=\"btn1\"></a>");
+				document.write("</center>");
+				document.write("</div>");
+				i++;
+			}
+		</script>
 	</div>
 	<style type="text/css">
 		.code{
