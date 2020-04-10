@@ -8,9 +8,9 @@
 		<div class="code-box">
 			<img src="cs1.png" width="100%" style="border-top-right-radius: 5px; border-top-left-radius: 5px">
 			<h2 style="text-align: center">할리갈리</h2>
-			<br>
 			<center>
-				<h2><input type="button" name="" style="" value="바로가기" class="btn1"></h2>
+				<br>
+				<input type="button" name="" style="" value="다운로드" class="btn1" onclick="window.location.assign('cs1.txt');">
 			</center>
 		</div>
 	</div>
@@ -28,7 +28,22 @@
 			border-width: 1px;
 		}
 		.btn1{
-			width: 90%;
+			border-style: solid;
+			outline: 0;
+			width: 88%;
+			height: 23pt;
+			font-weight: bolder;
+			border-radius: 5px;
+			border-color: rgb(0, 102, 255);
+			border-width: 1px;
+			background-color: rgba(77, 148, 255, 0.1);
+			color: rgb(0, 102, 255);
+			transition-duration: .3s;
+		}
+		.btn1:hover{
+			cursor: pointer;
+			background-color: rgba(77, 148, 255, 0.4);
+			transition-duration: .3s; 
 		}
 	</style>
 </body>
