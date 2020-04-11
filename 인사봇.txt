@@ -1,0 +1,5 @@
+function response(room, msg, sender, isGroupChat, replier, ImageDB) {
+ if(msg=="안녕"){
+  replier.reply("나도 안녕");
+ }
+}
