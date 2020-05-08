@@ -2,7 +2,8 @@
 <html lang="en" dir="ltr">
  <head>
   <meta charset="utf-8">
-  <title></title>
+  <title>ONCL</title>
+  <img src="oncl.png" alt="">
  </head>
  <body>
   <script>
@@ -69,7 +70,9 @@
      l4 = [15, 20];
     }else{
      if((ho==12&&mi>30)||(ho==13&&mi<30)){
-      document.write("<h4 style='margin:20px'>점심시간</h4><div class='isGoing'><h1 style='font-size:1em'>지금은 점심시간입니다.</h1></div>");
+      l = 10;
+      l2 = 10;
+      document.write("<h4 style='margin:20px'>점심시간</h4><div class='isGoing'><h1 style='font-size:1em'>🍚 지금은 점심시간입니다.</h1></div>");
      }else{
      }
      l = 7;
@@ -79,13 +82,13 @@
     if(l!=7){
      document.write("<h4 style='margin:20px'>진행중인 수업</h4><div class='isGoing' onclick=\"copyToClipboard('"+list[new Date().getDay()][l].split(':')[1]+"')\" title='코드를 클립보드에 복사' style=''><h1 style='font-size:1em'>과목 : "+list[new Date().getDay()][l].split(":")[0]+"</h1><h1 style='font-size:1em'>회의코드 : "+list[new Date().getDay()][l].split(":")[1]+"</h1><h1 style='font-size:1em'>종료 : "+l3.join(":")+"</h1></div>");
     }else{
-     document.write("<h4 style='margin:20px'>진행중인 수업</h4><div class='isGoing'><h1 style='font-size:1em'>⚠️ 진행중인 수업이 없습니다</h1></div>");
+     if(l!=10) document.write("<h4 style='margin:20px'>진행중인 수업</h4><div class='isGoing'><h1 style='font-size:1em'>⚠️ 진행중인 수업이 없습니다</h1></div>");
     }
     document.write("<h1 style='height: 0.1px;'></h1>")
     if(l2!=7){
      document.write("<h4 style='margin:20px'>대기중인 수업</h4><div class='isGoing' onclick=\"copyToClipboard('"+list[new Date().getDay()][l2].split(':')[1]+"')\" title='코드를 클립보드에 복사' style=''><h1 style='font-size:1em'>"+list[new Date().getDay()][l2].split(":")[0]+"</h1><h1 style='font-size:1em'>회의코드 : "+list[new Date().getDay()][l2].split(":")[1]+"</h1><h1 style='font-size:1em'>시작 : "+l4.join(":")+"</h1></div>");
     }else{
-     document.write("<h4 style='margin:20px'>대기중인 수업</h4><div class='isGoing'><h1 style='font-size:1em'>⚠️ 대기중인 수업이 없습니다</h1></div>");
+     if(l2!=10) document.write("<h4 style='margin:20px'>대기중인 수업</h4><div class='isGoing'><h1 style='font-size:1em'>⚠️ 대기중인 수업이 없습니다</h1></div>");
     }
    </script>
    <style type='text/css'>
