@@ -3,10 +3,12 @@
  <head>
   <meta charset="utf-8">
   <title>ONCL</title>
-  <img src="oncl.png" alt="" width="5em">
+  <center><a href=""><img src="oncl.png" style='' alt="" width="150em"></a></center>
+  <h2 height="10px;"></h2>
  </head>
  <body>
   <script>
+   localStorage.setItem("lu", new Date().getHours()+"시 "+new Date().getMinutes()+"분");
    var list = [[""],["영어:354-072-1372","사회:695-191-3334","국어B:610-106-0539","과학A:349-040-0908","체육:665-273-3249","수학B:696-862-0623"],["미술:299-741-8686","영어:354-072-1372","국어A:325-923-2442","과학A:349-040-0908","주제선택","주제선택"],["기가:968-474-7634","진로:322-151-1837","영어:354-072-1372","수학A:393-216-4661","예술체육","예술체육"],["국어A:325-923-2442","기가:968-474-7634","수학A:393-216-4661","과학B:817-595-1434","스포츠","도덕:413-228-1157","사회:695-191-3334"],["체육:665-273-3249","정보:410-273-1671","수학A:393-216-4661","기가:968-474-7634","국어B:610-106-0539","미술:299-741-8686","자율"],[""]];
    function copyToClipboard(val) {
     var t = document.createElement("textarea");
@@ -20,6 +22,7 @@
 		</script>
   <li style="list-style:none">
    <script type="text/javascript">
+    try{
     var ho = new Date().getHours();
     var mi = new Date().getMinutes();
     var l = 7;
@@ -74,22 +77,29 @@
       l2 = 10;
       document.write("<h4 style='margin:20px'>점심시간</h4><div class='isGoing'><h1 style='font-size:1em'>🍚 지금은 점심시간입니다.</h1></div>");
      }else{
+      l = 7;
+      l2 = 7;
      }
-     l = 7;
     }
     if(typeof l=="undefined") l = 7;
     if(typeof l2=="undefined") l2 = 7;
-    if(l!=7){
+    if(l!=7&&l!=10){
      document.write("<h4 style='margin:20px'>진행중인 수업</h4><div class='isGoing' onclick=\"copyToClipboard('"+list[new Date().getDay()][l].split(':')[1]+"')\" title='코드를 클립보드에 복사' style=''><h1 style='font-size:1em'>과목 : "+list[new Date().getDay()][l].split(":")[0]+"</h1><h1 style='font-size:1em'>회의코드 : "+list[new Date().getDay()][l].split(":")[1]+"</h1><h1 style='font-size:1em'>종료 : "+l3.join(":")+"</h1></div>");
     }else{
-     if(l!=10) document.write("<h4 style='margin:20px'>진행중인 수업</h4><div class='isGoing'><h1 style='font-size:1em'>⚠️ 진행중인 수업이 없습니다</h1></div>");
+     if(l!=10){
+      document.write("<h4 style='margin:20px'>진행중인 수업</h4><div class='isGoing'><h1 style='font-size:1em'>⚠️ 진행중인 수업이 없습니다</h1></div>");
+     }
     }
-    document.write("<h1 style='height: 0.1px;'></h1>")
-    if(l2!=7){
+    document.write("<h1 style='height: 0.1px;'></h1>");
+    if(l2!=7&&l2!=10){
      document.write("<h4 style='margin:20px'>대기중인 수업</h4><div class='isGoing' onclick=\"copyToClipboard('"+list[new Date().getDay()][l2].split(':')[1]+"')\" title='코드를 클립보드에 복사' style=''><h1 style='font-size:1em'>"+list[new Date().getDay()][l2].split(":")[0]+"</h1><h1 style='font-size:1em'>회의코드 : "+list[new Date().getDay()][l2].split(":")[1]+"</h1><h1 style='font-size:1em'>시작 : "+l4.join(":")+"</h1></div>");
     }else{
      if(l2!=10) document.write("<h4 style='margin:20px'>대기중인 수업</h4><div class='isGoing'><h1 style='font-size:1em'>⚠️ 대기중인 수업이 없습니다</h1></div>");
     }
+    document.write("<h5 style='color:gray; margin: 20px'>* 새로고침 하여 업데이트<p>마지막 업데이트 : "+localStorage.getItem("lu")+"<p>");
+   }catch(e){
+    alert(e)
+   }
    </script>
    <style type='text/css'>
     .isGoing{
