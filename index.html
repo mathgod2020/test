@@ -23,80 +23,84 @@
   <li style="list-style:none">
    <script type="text/javascript">
     try{
-    var ho = new Date().getHours();
-    var mi = new Date().getMinutes();
-    var l = 7;
-    var l2 = 7;
-    var l3 = [];
-    var l4 = [];
-    if(ho==9&&(mi>0&&mi<=45)){
-     l = 0;
-     l3 = [9,45];
-    }else if(ho==8&&(mi>49)){
-     l2 = 0;
-     l4 = [9,0];
-    }else if((mi>=55&&ho==9)||(ho==10&&mi<40)){
-     l = 1;
-     l3 = [10,40];
-    }else if((mi>=45&&ho==9&&mi<55)){
-     l2 = 1;
-     l4 = [9,55];
-    }else if((mi>=50&&ho==10)||(ho==11&&mi<35)){
-     l = 2;
-     l3 = [11,35];
-    }else if((mi>=40&&ho==10&&mi<50)){
-     l2 = 2;
-     l4 = [10, 50];
-    }else if((mi>=45&&ho==11)||(ho==12&&mi<30)){
-     l = 3;
-     l3 = [12, 30];
-    }else if((mi>=35&&ho==11&&mi<45)){
-     l2 = 3;
-     l4 = [11, 45];
-    }else if((mi>=30&&ho==13)||(ho==14&&mi<15)){
-     l = 4;
-     l3 = [14, 15];
-    }else if((mi>=20&&mi<30&&ho==13)){
-     l2 = 4;
-     l4 = [13, 30];
-    }else if((mi>=25&&ho==14)||(ho==15&&mi<10)){
-     l = 5;
-     l3 = [15, 10];
-    }else if((mi>=15&&ho==14)||(ho==15&&mi<10)){
-     l2 = 5;
-     l4 = [14, 25];
-    }else if((mi>=20&&ho==15)||(ho==16&&mi<5)){
-     l = 6;
-     l3 = [16, 5];
-    }else if((mi>=10&&mi<20&&ho==15)){
-     l2 = 6;
-     l4 = [15, 20];
+    if(new Date().getDay()==0||new Date().getDay()==6){
+     document.write("<h4 style='margin:20px'>예정된 수업이 없습니다</h4><div class='isGoing'><h1 style='font-size:1em'>🙂 오늘은 휴일이예요.</h1></div>");
     }else{
-     if((ho==12&&mi>30)||(ho==13&&mi<30)){
-      l = 10;
-      l2 = 10;
-      document.write("<h4 style='margin:20px'>점심시간</h4><div class='isGoing'><h1 style='font-size:1em'>🍚 지금은 점심시간입니다.</h1></div>");
+     var ho = new Date().getHours();
+     var mi = new Date().getMinutes();
+     var l = 7;
+     var l2 = 7;
+     var l3 = [];
+     var l4 = [];
+     if(ho==9&&(mi>0&&mi<=45)){
+      l = 0;
+      l3 = [9,45];
+     }else if(ho==8&&(mi>49)){
+      l2 = 0;
+      l4 = [9,0];
+     }else if((mi>=55&&ho==9)||(ho==10&&mi<40)){
+      l = 1;
+      l3 = [10,40];
+     }else if((mi>=45&&ho==9&&mi<55)){
+      l2 = 1;
+      l4 = [9,55];
+     }else if((mi>=50&&ho==10)||(ho==11&&mi<35)){
+      l = 2;
+      l3 = [11,35];
+     }else if((mi>=40&&ho==10&&mi<50)){
+      l2 = 2;
+      l4 = [10, 50];
+     }else if((mi>=45&&ho==11)||(ho==12&&mi<30)){
+      l = 3;
+      l3 = [12, 30];
+     }else if((mi>=35&&ho==11&&mi<45)){
+      l2 = 3;
+      l4 = [11, 45];
+     }else if((mi>=30&&ho==13)||(ho==14&&mi<15)){
+      l = 4;
+      l3 = [14, 15];
+     }else if((mi>=20&&mi<30&&ho==13)){
+      l2 = 4;
+      l4 = [13, 30];
+     }else if((mi>=25&&ho==14)||(ho==15&&mi<10)){
+      l = 5;
+      l3 = [15, 10];
+     }else if((mi>=15&&ho==14)||(ho==15&&mi<10)){
+      l2 = 5;
+      l4 = [14, 25];
+     }else if((mi>=20&&ho==15)||(ho==16&&mi<5)){
+      l = 6;
+      l3 = [16, 5];
+     }else if((mi>=10&&mi<20&&ho==15)){
+      l2 = 6;
+      l4 = [15, 20];
      }else{
-      l = 7;
-      l2 = 7;
+      if((ho==12&&mi>30)||(ho==13&&mi<30)){
+       l = 10;
+       l2 = 10;
+       document.write("<h4 style='margin:20px'>점심시간</h4><div class='isGoing'><h1 style='font-size:1em'>🍚 지금은 점심시간입니다.</h1></div>");
+      }else{
+       l = 7;
+       l2 = 7;
+      }
      }
-    }
-    if(typeof l=="undefined") l = 7;
-    if(typeof l2=="undefined") l2 = 7;
-    if(l!=7&&l!=10){
-     document.write("<h4 style='margin:20px'>진행중인 수업</h4><div class='isGoing' onclick=\"copyToClipboard('"+list[new Date().getDay()][l].split(':')[1]+"')\" title='코드를 클립보드에 복사' style=''><h1 style='font-size:1em'>과목 : "+list[new Date().getDay()][l].split(":")[0]+"</h1><h1 style='font-size:1em'>회의코드 : "+list[new Date().getDay()][l].split(":")[1]+"</h1><h1 style='font-size:1em'>종료 : "+l3.join(":")+"</h1></div>");
-    }else{
-     if(l!=10){
-      document.write("<h4 style='margin:20px'>진행중인 수업</h4><div class='isGoing'><h1 style='font-size:1em'>⚠️ 진행중인 수업이 없습니다</h1></div>");
+     if(typeof l=="undefined") l = 7;
+     if(typeof l2=="undefined") l2 = 7;
+     if(l!=7&&l!=10){
+      document.write("<h4 style='margin:20px'>진행중인 수업</h4><div class='isGoing' onclick=\"copyToClipboard('"+list[new Date().getDay()][l].split(':')[1]+"')\" title='코드를 클립보드에 복사' style=''><h1 style='font-size:1em'>과목 : "+list[new Date().getDay()][l].split(":")[0]+"</h1><h1 style='font-size:1em'>회의코드 : "+list[new Date().getDay()][l].split(":")[1]+"</h1><h1 style='font-size:1em'>종료 : "+l3.join(":")+"</h1></div>");
+     }else{
+      if(l!=10){
+       document.write("<h4 style='margin:20px'>진행중인 수업</h4><div class='isGoing'><h1 style='font-size:1em'>⚠️ 진행중인 수업이 없습니다</h1></div>");
+      }
      }
+     document.write("<h1 style='height: 0.1px;'></h1>");
+     if(l2!=7&&l2!=10){
+      document.write("<h4 style='margin:20px'>대기중인 수업</h4><div class='isGoing' onclick=\"copyToClipboard('"+list[new Date().getDay()][l2].split(':')[1]+"')\" title='코드를 클립보드에 복사' style=''><h1 style='font-size:1em'>"+list[new Date().getDay()][l2].split(":")[0]+"</h1><h1 style='font-size:1em'>회의코드 : "+list[new Date().getDay()][l2].split(":")[1]+"</h1><h1 style='font-size:1em'>시작 : "+l4.join(":")+"</h1></div>");
+     }else{
+      if(l2!=10) document.write("<h4 style='margin:20px'>대기중인 수업</h4><div class='isGoing'><h1 style='font-size:1em'>⚠️ 대기중인 수업이 없습니다</h1></div>");
+     }
+     document.write("<h5 style='color:gray; margin: 20px'>* 새로고침 하여 업데이트<p>마지막 업데이트 : "+localStorage.getItem("lu")+"<p>");
     }
-    document.write("<h1 style='height: 0.1px;'></h1>");
-    if(l2!=7&&l2!=10){
-     document.write("<h4 style='margin:20px'>대기중인 수업</h4><div class='isGoing' onclick=\"copyToClipboard('"+list[new Date().getDay()][l2].split(':')[1]+"')\" title='코드를 클립보드에 복사' style=''><h1 style='font-size:1em'>"+list[new Date().getDay()][l2].split(":")[0]+"</h1><h1 style='font-size:1em'>회의코드 : "+list[new Date().getDay()][l2].split(":")[1]+"</h1><h1 style='font-size:1em'>시작 : "+l4.join(":")+"</h1></div>");
-    }else{
-     if(l2!=10) document.write("<h4 style='margin:20px'>대기중인 수업</h4><div class='isGoing'><h1 style='font-size:1em'>⚠️ 대기중인 수업이 없습니다</h1></div>");
-    }
-    document.write("<h5 style='color:gray; margin: 20px'>* 새로고침 하여 업데이트<p>마지막 업데이트 : "+localStorage.getItem("lu")+"<p>");
    }catch(e){
     alert(e)
    }
